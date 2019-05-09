@@ -12,28 +12,31 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-  console.log('a user connected');
-  // create a new player and add it to our players object
-  players[socket.id] = {
+  console.log('a user connected'); // A new player object is being created whenever a user connects//
+  players[socket.id] = {//player object contains player id, location x, y and also what team its in//
     rotation: 0,
     x: Math.floor(Math.random() * 700) + 50,
     y: Math.floor(Math.random() * 500) + 50,
     playerId: socket.id,
     team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue'
   };
-  // send the players object to the new player
-  socket.emit('currentPlayers', players);
-  // update all other players of the new player
+
+  socket.emit('currentPlayers', players); //
   socket.broadcast.emit('newPlayer', players[socket.id]);
 
-  // when a player disconnects, remove them from our players object
   socket.on('disconnect', function () {
-    console.log('user disconnected');
-    // remove this player from our players object
+    console.log('user disconnected'); //removes player and sends the message to the entire server//
     delete players[socket.id];
-    // emit a message to all players to remove this player
     io.emit('disconnect', socket.id);
   });
+
+  socket.on('playerMovement', function (movementData) {//handles player movement, x and y coordinates are taken here//
+    players[socket.id].x = movementData.x;
+    players[socket.id].y = movementData.y;
+    players[socket.id].rotation = movementData.rotation;
+
+  socket.broadcast.emit('playerMoved', players[socket.id]); // Broadcast.emit sends message to all other clients other than the new connection here//
+});
 });
 
 server.listen(8081, function () {

@@ -1,8 +1,8 @@
 var config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: 1000,
-  height: 800,
+  width: 1080,
+  height: 1080,
   physics: {
     default: 'arcade',
     arcade: {
@@ -34,13 +34,13 @@ function create() {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
       } else {
-        addOtherPlayers(self, players[id]);
+        addotherPlayers(self, players[id]);
       }
     });
   });
 
   this.socket.on('newPlayer', function (playerInfo) {
-    addOtherPlayers(self, playerInfo);
+    addotherPlayers(self, playerInfo);
   });
 
   this.socket.on('disconnect', function (playerId) {
@@ -51,9 +51,15 @@ function create() {
 
     });
   });
-
-this.cursors = this.input.keyboard.createCursorKeys();
-
+this.socket.on('playerMoved', function (playerInfo) {
+  self.otherPlayers.getChildren().forEach(function (otherPlayer) {
+    if (playerInfo.playerId === otherPlayer.playerId) {
+      otherPlayer.setRotation(playerInfo.rotation);
+      otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+    }
+  });
+});
+  this.cursors = this.input.keyboard.createCursorKeys();
   }
 
 function update() {
@@ -71,9 +77,20 @@ if (this.ship) {
     } else {
       this.ship.setAcceleration(0);
     }
+    var x = this.ship.x;
+    var y = this.ship.y;
+    var r = this.ship.rotation;
+    if (this.ship.oldPosition && (x !== this.ship.oldPosition.x || y !== this.ship.oldPosition.y || r !== this.ship.oldPosition.rotation)) {
+      this.socket.emit('playerMovement', { x: this.ship.x, y: this.ship.y, rotation: this.ship.rotation });
+}
 
+// save old position data
+this.ship.oldPosition = {
+  x: this.ship.x,
+  y: this.ship.y,
+  rotation: this.ship.rotation
+};
     this.physics.world.wrap(this.ship, 5);
-    this.physics.world.collide(this.ship, this.otherplayers);
   }
 
 }
@@ -90,7 +107,7 @@ function addPlayer(self, playerInfo) {
   self.ship.setMaxVelocity(200);
 }
 
-function addOtherPlayers(self, playerInfo) {
+function addotherPlayers(self, playerInfo) {
   const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
   if (playerInfo.team === 'blue') {
     otherPlayer.setTint(0x0000ff);
