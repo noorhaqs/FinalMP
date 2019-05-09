@@ -3,6 +3,7 @@ var config = {
   parent: 'phaser-example',
   width: 1080,
   height: 1080,
+  backgroundColor: 'rgb(124, 185, 232)',
   physics: {
     default: 'arcade',
     arcade: {
@@ -20,42 +21,45 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-this.load.image('ship', 'assets/spaceShips_001.png');
-this.load.image('otherPlayer', 'assets/enemyBlack5.png');
-
+this.load.image('Playership', 'assets/roundish.png');
+this.load.image('TheOtherOne', 'assets/circleee.png');
 }
 
 function create() {
+
   var self = this;
   this.socket = io();
-  this.otherPlayers = this.physics.add.group();
+  this.TheOthrOnee = this.physics.add.group();
+
+//  this.game.stage.backgroundColor = 'rgb(124, 185, 232)';//
+
   this.socket.on('currentPlayers', function (players) {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
       } else {
-        addotherPlayers(self, players[id]);
+        addTheOthrOnee(self, players[id]);
       }
     });
   });
 
   this.socket.on('newPlayer', function (playerInfo) {
-    addotherPlayers(self, playerInfo);
+    addTheOthrOnee(self, playerInfo);
   });
 
   this.socket.on('disconnect', function (playerId) {
-    self.otherPlayers.getChildren().forEach(function (otherPlayer) {
-      if (playerId === otherPlayer.playerId) {
-        otherPlayer.destroy();
+    self.TheOthrOnee.getChildren().forEach(function (TheOtherOne) {
+      if (playerId === TheOtherOne.playerId) {
+        TheOtherOne.destroy();
       }
 
     });
   });
 this.socket.on('playerMoved', function (playerInfo) {
-  self.otherPlayers.getChildren().forEach(function (otherPlayer) {
-    if (playerInfo.playerId === otherPlayer.playerId) {
-      otherPlayer.setRotation(playerInfo.rotation);
-      otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+  self.TheOthrOnee.getChildren().forEach(function (TheOtherOne) {
+    if (playerInfo.playerId === TheOtherOne.playerId) {
+      TheOtherOne.setRotation(playerInfo.rotation);
+      TheOtherOne.setPosition(playerInfo.x, playerInfo.y);
     }
   });
 });
@@ -63,57 +67,57 @@ this.socket.on('playerMoved', function (playerInfo) {
   }
 
 function update() {
-if (this.ship) {
+if (this.Playership) {
     if (this.cursors.left.isDown) {
-      this.ship.setAngularVelocity(-150);
+      this.Playership.setAngularVelocity(-150);
     } else if (this.cursors.right.isDown) {
-      this.ship.setAngularVelocity(150);
+      this.Playership.setAngularVelocity(150);
     } else {
-      this.ship.setAngularVelocity(0);
+      this.Playership.setAngularVelocity(0);
     }
 
     if (this.cursors.up.isDown) {
-      this.physics.velocityFromRotation(this.ship.rotation + 1.5, 100, this.ship.body.acceleration);
+      this.physics.velocityFromRotation(this.Playership.rotation + 1.5, 100, this.Playership.body.acceleration);
     } else {
-      this.ship.setAcceleration(0);
+      this.Playership.setAcceleration(0);
     }
-    var x = this.ship.x;
-    var y = this.ship.y;
-    var r = this.ship.rotation;
-    if (this.ship.oldPosition && (x !== this.ship.oldPosition.x || y !== this.ship.oldPosition.y || r !== this.ship.oldPosition.rotation)) {
-      this.socket.emit('playerMovement', { x: this.ship.x, y: this.ship.y, rotation: this.ship.rotation });
+    var x = this.Playership.x;
+    var y = this.Playership.y;
+    var r = this.Playership.rotation;
+    if (this.Playership.oldPosition && (x !== this.Playership.oldPosition.x || y !== this.Playership.oldPosition.y || r !== this.Playership.oldPosition.rotation)) {
+      this.socket.emit('playerMovement', { x: this.Playership.x, y: this.Playership.y, rotation: this.Playership.rotation });
 }
 
 // save old position data
-this.ship.oldPosition = {
-  x: this.ship.x,
-  y: this.ship.y,
-  rotation: this.ship.rotation
+this.Playership.oldPosition = {
+  x: this.Playership.x,
+  y: this.Playership.y,
+  rotation: this.Playership.rotation
 };
-    this.physics.world.wrap(this.ship, 5);
+    this.physics.world.wrap(this.Playership, 5);
   }
 
 }
 
 function addPlayer(self, playerInfo) {
-  self.ship = self.physics.add.image(playerInfo.x, playerInfo.y, 'ship').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
+  self.Playership = self.physics.add.image(playerInfo.x, playerInfo.y, 'Playership').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
   if (playerInfo.team === 'blue') {
-    self.ship.setTint(0x0000ff);
+    self.Playership.setTint(0x0000ff);
   } else {
-    self.ship.setTint(0xff0000);
+    self.Playership.setTint(0xff0000);
   }
-  self.ship.setDrag(100);
-  self.ship.setAngularDrag(100);
-  self.ship.setMaxVelocity(200);
+  self.Playership.setDrag(100);
+  self.Playership.setAngularDrag(100);
+  self.Playership.setMaxVelocity(200);
 }
 
-function addotherPlayers(self, playerInfo) {
-  const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
+function addTheOthrOnee(self, playerInfo) {
+  const TheOtherOne = self.add.sprite(playerInfo.x, playerInfo.y, 'TheOtherOne').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
   if (playerInfo.team === 'blue') {
-    otherPlayer.setTint(0x0000ff);
+    TheOtherOne.setTint(0x0000ff);
   } else {
-    otherPlayer.setTint(0xff0000);
+    TheOtherOne.setTint(0xff0000);
   }
-  otherPlayer.playerId = playerInfo.playerId;
-  self.otherPlayers.add(otherPlayer);
+  TheOtherOne.playerId = playerInfo.playerId;
+  self.TheOthrOnee.add(TheOtherOne);
 }
