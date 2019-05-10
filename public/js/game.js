@@ -21,8 +21,10 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
+
 this.load.image('Playership', 'assets/roundish.png');
-this.load.image('TheOtherOne', 'assets/circleee.png');
+this.load.image('TheOtherOne', 'assets/UFO.png');
+this.load.image('star', 'assets/circlee.png');
 }
 
 function create() {
@@ -74,6 +76,14 @@ this.redScoreText = this.add.text(584, 16, '', { fontSize: '32px', fill: '#FF000
 this.socket.on('scoreUpdate', function(scores) {
   self.blueScoreText.setText('Blue: ' + scores.blue);
   self.redScoreText.setText('Red: ' + scores.red);
+});
+
+this.socket.on('starLocation', function (starLocation) {
+  if (!self.star) {
+    self.star = self.add.image(starLocation.x, starLocation.y, 'star');
+  } else {
+    self.star.setPosition(starLocation.x, starLocation.y);
+  }
 });
   }
 

@@ -6,12 +6,10 @@ var io = require('socket.io').listen(server);
 var players = {};
 
 
-star = {
-  x: Math.floor(Math.random() *700)+50,
-  y: Math.floor(Math.random() *500)+50
+var star = {
+  x: Math.floor(Math.random() * 700) + 50,
+  y: Math.floor(Math.random() * 500) + 50
 };
-
-
 var scores = {
   blue: 0,
   red: 0
@@ -44,6 +42,8 @@ io.on('connection', function (socket) {
   socket.emit('starLocation', star);
   socket.emit('scoreUpdate', scores);
   socket.broadcast.emit('newPlayer', players[socket.id]);
+
+
 
 
   socket.on('disconnect', function () {
