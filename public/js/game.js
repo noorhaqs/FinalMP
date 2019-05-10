@@ -24,7 +24,7 @@ function preload() {
 
 this.load.image('Playership', 'assets/roundish.png');
 this.load.image('TheOtherOne', 'assets/UFO.png');
-this.load.image('star', 'assets/circlee.png');
+this.load.image('pickingupThingy', 'assets/circlee.png');
 }
 
 function create() {
@@ -78,11 +78,11 @@ this.socket.on('scoreUpdate', function(scores) {
   self.redScoreText.setText('Red: ' + scores.red);
 });
 
-this.socket.on('starLocation', function (starLocation) {
-  if (!self.star) {
-    self.star = self.add.image(starLocation.x, starLocation.y, 'star');
+this.socket.on('pickingupThingyLocation', function (pickingupThingyLocation) {
+  if (!self.pickingupThingy) {
+    self.pickingupThingy = self.add.image(pickingupThingyLocation.x, pickingupThingyLocation.y, 'pickingupThingy');
   } else {
-    self.star.setPosition(starLocation.x, starLocation.y);
+    self.pickingupThingy.setPosition(pickingupThingyLocation.x, pickingupThingyLocation.y);
   }
 });
   }
