@@ -1,0 +1,28 @@
+{
+  "name": "finalmp",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron-packager ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noorhaqs/FinalMP.git"
+  },
+  "author": "Noorul H. Sabaah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/noorhaqs/FinalMP/issues"
+  },
+  "homepage": "https://github.com/noorhaqs/FinalMP#readme",
+  "devDependencies": {
+    "electron-packager": "^13.1.1",
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  },
+  "dependencies": {
+    "electron": "^5.0.1"
+  },
+  "keywords": [],
+  "description": ""
+}

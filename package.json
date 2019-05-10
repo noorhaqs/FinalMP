@@ -1,10 +1,9 @@
 {
-  "name": "finalmp",
+  "name": "electron",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
@@ -17,10 +16,14 @@
   },
   "homepage": "https://github.com/noorhaqs/FinalMP#readme",
   "devDependencies": {
+    "electron-packager": "^13.1.1",
     "express": "^4.16.4",
     "socket.io": "^2.2.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "electron": "^5.0.1"
+    
+  },
   "keywords": [],
   "description": ""
 }
