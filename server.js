@@ -37,21 +37,16 @@ io.on('connection', function (socket) {
     team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue'
   };
 
-
-
-  socket.emit('pLayersingame', players);//feeding the location of other players
-  socket.emit('pickingupThingyLocation', pickingupThingy);//feeding the location of the item to pick up
-  socket.emit('sCoreboardupdate', sCoreBoard);//feeding/updating the score
-  socket.broadcast.emit('noobie', players[socket.id]);//everybody except for the new player gets the update that a new player has joined
-
-
-
-
   socket.on('disconnect', function () {
     console.log('user disconnected: ', socket.id);//sends a message that a user has disconnected
     delete players[socket.id];
     io.emit('disconnect', socket.id);
   });
+
+  socket.emit('pLayersingame', players);//feeding the location of other players
+  socket.emit('pickingupThingyLocation', pickingupThingy);//feeding the location of the item to pick up
+  socket.emit('sCoreboardupdate', sCoreBoard);//feeding/updating the score
+  socket.broadcast.emit('noobie', players[socket.id]);//everybody except for the new player gets the update that a new player has joined
 
 
   socket.on('playerMovement', function (movementData) {//handles player movement, x and y coordinates are taken here//

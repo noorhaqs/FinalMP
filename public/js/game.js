@@ -22,9 +22,9 @@ var game = new Phaser.Game(config);
 
 function preload() {
 
-  this.load.image('pLayership', 'assets/spaceShips_001.png');
-  this.load.image('TheOtherOne', 'assets/enemyBlack5.png');
-  this.load.image('pickingupThingy', 'assets/pickingupThingy_gold.png');
+  this.load.image('pLayership', 'assets/roundish.png');
+  this.load.image('TheOtherOne', 'assets/UFO.png');
+  this.load.image('pickingupThingy', 'assets');
 }
 
 function create() {
@@ -126,7 +126,7 @@ function update() {
 
 }
 
-function addPlayer(self, playerInfo) {
+function addPlayer(self, playerInfo) { //responsible for putting the player
   self.pLayership = self.physics.add.image(playerInfo.x, playerInfo.y, 'pLayership').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
   if (playerInfo.team === 'blue') {
     self.pLayership.setTint(0x0000ff);
