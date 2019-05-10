@@ -1,8 +1,8 @@
 var config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: 1080,
-  height: 1080,
+  width: 1500,
+  height: 800,
   backgroundColor: 'rgb(124, 185, 232)',
   physics: {
     default: 'arcade',
@@ -42,19 +42,20 @@ function create() {
       }
     });
   });
-
   this.socket.on('newPlayer', function (playerInfo) {
     addTheOthrOnee(self, playerInfo);
   });
+
 
   this.socket.on('disconnect', function (playerId) {
     self.TheOthrOnee.getChildren().forEach(function (TheOtherOne) {
       if (playerId === TheOtherOne.playerId) {
         TheOtherOne.destroy();
       }
-
     });
   });
+
+
 this.socket.on('playerMoved', function (playerInfo) {
   self.TheOthrOnee.getChildren().forEach(function (TheOtherOne) {
     if (playerInfo.playerId === TheOtherOne.playerId) {
@@ -63,7 +64,17 @@ this.socket.on('playerMoved', function (playerInfo) {
     }
   });
 });
+
+
   this.cursors = this.input.keyboard.createCursorKeys();
+
+this.blueScoreText = this.add.text(16, 16, '', { fontSize: '32px', fill: '#0000FF' });
+this.redScoreText = this.add.text(584, 16, '', { fontSize: '32px', fill: '#FF0000' });
+
+this.socket.on('scoreUpdate', function(scores) {
+  self.blueScoreText.setText('Blue: ' + scores.blue);
+  self.redScoreText.setText('Red: ' + scores.red);
+});
   }
 
 function update() {
@@ -88,7 +99,6 @@ if (this.Playership) {
       this.socket.emit('playerMovement', { x: this.Playership.x, y: this.Playership.y, rotation: this.Playership.rotation });
 }
 
-// save old position data
 this.Playership.oldPosition = {
   x: this.Playership.x,
   y: this.Playership.y,
